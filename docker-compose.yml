@@ -1,0 +1,36 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:15
+    container_name: askdata_postgres
+    environment:
+      POSTGRES_USER: ketul
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: ecommerce
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "ketul"]
+      interval: 10s
+      retries: 5
+
+  backend:
+    build: ./backend
+    container_name: askdata_backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: postgres://ketul:secret@db:5432/ecommerce
+
+  frontend:
+    build: ./frontend
+    container_name: askdata_frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
