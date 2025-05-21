@@ -11,8 +11,9 @@ services:
       - "5432:5432"
     volumes:
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres/ecommerce_data.csv:/docker-entrypoint-initdb.d/ecommerce_data.csv
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "ketul"]
+      test: ["CMD", "pg_isready", "-U", "ketul", "-d", "ecommerce"]
       interval: 10s
       retries: 5
 
@@ -25,7 +26,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      DB_URL: postgres://ketul:secret@db:5432/ecommerce
+      DB_URL: postgresql://ketul:secret@db:5432/ecommerce
 
   frontend:
     build: ./frontend
