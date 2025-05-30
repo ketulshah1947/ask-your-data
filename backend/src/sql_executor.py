@@ -1,7 +1,7 @@
 from sqlglot import parse_one, exp
 from sqlglot.errors import ParseError
 from sqlalchemy import text
-
+from src.logger import logger
 from src.db_engine import db_engine
 
 FORBIDDEN_NODES = {
@@ -29,6 +29,10 @@ def is_safe_sql(sql: str) -> bool:
 
 
 def run_sql(sql: str) -> list[dict]:
-    with db_engine.connect() as conn:
-        result = conn.execute(text(sql))
-        return [dict(row._mapping) for row in result]
+    try:
+        with db_engine.connect() as conn:
+            result = conn.execute(text(sql))
+            return [dict(row._mapping) for row in result]
+    except Exception as err:
+        logger.exception(f"Failed to execute query with an error: {err}", err)
+        return []

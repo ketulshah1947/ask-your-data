@@ -5,9 +5,9 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import torch
 from src.logger import logger
 
-LOCAL_MODEL_PATH = "./local_model"
-tokenizer = AutoTokenizer.from_pretrained(LOCAL_MODEL_PATH)
-model = AutoModelForSeq2SeqLM.from_pretrained(LOCAL_MODEL_PATH)
+LOCAL_MODEL_PATH = os.path.abspath("./local_model")
+tokenizer = AutoTokenizer.from_pretrained(LOCAL_MODEL_PATH, local_files_only=True)
+model = AutoModelForSeq2SeqLM.from_pretrained(LOCAL_MODEL_PATH, local_files_only=True)
 model.eval()
 
 if torch.cuda.is_available():
