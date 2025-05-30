@@ -13,7 +13,7 @@ services:
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./postgres/ecommerce_data.csv:/docker-entrypoint-initdb.d/ecommerce_data.csv
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "ketul", "-d", "ecommerce"]
+      test: [ "CMD", "pg_isready", "-U", "ketul", "-d", "ecommerce" ]
       interval: 10s
       retries: 5
 
@@ -32,6 +32,6 @@ services:
     build: ./frontend
     container_name: askdata_frontend
     ports:
-      - "3000:3000"
+      - "3000:80"
     depends_on:
       - backend
