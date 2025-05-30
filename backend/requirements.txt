@@ -7,3 +7,4 @@ sqlglot>=18.0.0
 requests
 transformers
 torch
+pytest
