@@ -2,13 +2,14 @@ version: '3.9'
 services:
   llm:
     build: ./llm
-    container_name: askdata_llm
+#    container_name: askdata_llm
     ports:
       - "8001:8001"
+    networks: [askdatanet]
 
   db:
     image: postgres:15
-    container_name: askdata_postgres
+#    container_name: askdata_postgres
     environment:
       POSTGRES_USER: ketul
       POSTGRES_PASSWORD: secret
@@ -22,10 +23,11 @@ services:
       test: [ "CMD", "pg_isready", "-U", "ketul", "-d", "ecommerce" ]
       interval: 10s
       retries: 5
+    networks: [askdatanet]
 
   backend:
     build: ./backend
-    container_name: askdata_backend
+#    container_name: askdata_backend
     ports:
       - "8000:8000"
     depends_on:
@@ -33,11 +35,17 @@ services:
         condition: service_healthy
     environment:
       DB_URL: postgresql://ketul:secret@db:5432/ecommerce
+      LLM_URL: http://llm:8001
+    networks: [askdatanet]
 
   frontend:
     build: ./frontend
-    container_name: askdata_frontend
+#    container_name: askdata_frontend
     ports:
       - "3000:80"
     depends_on:
       - backend
+    networks: [askdatanet]
+
+networks:
+  askdatanet:
