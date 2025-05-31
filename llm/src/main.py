@@ -26,7 +26,7 @@ def healthz():
 def ask(request: QueryRequest):
     try:
         logger.info(f"request: {request}")
-        answer = generate(request.prompt, request.max_length, request.do_sample, request.num_return_sequences)
+        answer = generate(request.prompt)
         return json.dumps({"answer": answer})
     except Exception as e:
-        return json.dumps({"error": e})
+        return json.dumps({"error": f"{e}"})
